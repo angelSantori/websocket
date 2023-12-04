@@ -12,6 +12,9 @@ var server = require('http').Server(app);
  */
 var io = require('socket.io')(server);
 
+/* Usamos un middleware para usar elementos estaticos en la sección pública de la aplicación */
+app.use(express.static('../public'));
+
 app.get('/', function(req, res){
     res.status(200).send("Hola mundo");
 });
@@ -20,6 +23,13 @@ app.get('/', function(req, res){
 /* De esta forma activamos socket para que este escuchando mandamos un mensaje de control por consola para saber que pasa y tenemos que hacer que el mensaje venga del navegador web mediante html JS */
 io.on('connection', function(socket){
     console.log('Alguien se ha conectado con socket');
+
+    /* Aqui controlamos los eventos del cliente mediante sockets */
+    socket.emit('messages', {
+        id: 1,
+        texto: "Hola soy un mensaje",
+        autor: "Manuel Antonio Campa Martínez"
+    });
 });
 
 server.listen(3005, function(){
