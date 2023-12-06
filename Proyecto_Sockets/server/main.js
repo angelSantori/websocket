@@ -12,6 +12,13 @@ var server = require('http').Server(app);
  */
 var io = require('socket.io')(server);
 
+
+var messages = [{
+    id: 1,
+    texto: "Hola soy un mensaje",
+    autor: "Manuel Antonio Campa Martínez"
+}];
+
 /* Usamos un middleware para usar elementos estaticos en la sección pública de la aplicación */
 app.use(express.static('../public'));
 
@@ -25,10 +32,9 @@ io.on('connection', function(socket){
     console.log('Alguien se ha conectado con socket');
 
     /* Aqui controlamos los eventos del cliente mediante sockets */
-    socket.emit('messages', {
-        id: 1,
-        texto: "Hola soy un mensaje",
-        autor: "Manuel Antonio Campa Martínez"
+    socket.emit('messages', messages);
+    socket.on('new message', function(data){
+        Message.push(data);
     });
 });
 
